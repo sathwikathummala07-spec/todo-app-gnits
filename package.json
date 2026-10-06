@@ -8,6 +8,6 @@
     "start": "node server/index.js"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0"
+    "concurrently": "^9.2.4"
   }
 }

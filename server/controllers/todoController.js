@@ -2,13 +2,21 @@ const Todo = require("../models/Todo");
 
 // GET /api/todos
 const getTodos = async (req, res) => {
-  // Complete this to get all todo items
+  try{
+    const todo= await Todo.find();
+    res.status(200).json(todo);
+  }catch(err){
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
 };
 
 // POST /api/todos
 const createTodo = async (req, res) => {
   try {
-    // Complete this to add the entry in db
+    const todo = new Todo(req.body);
+    await todo.save();
+    res.status(201).json(todo);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });
@@ -22,9 +30,9 @@ const updateTodo = async (req, res) => {
       new: true,
     });
     if (!todo){
-      // Complete this to return a relevant response
+      return res.status(404).json({ message: "Todo not found" });
     }
-    res.json(todo);
+    res.status(200).json(todo);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });
@@ -33,7 +41,16 @@ const updateTodo = async (req, res) => {
 
 // DELETE /api/todos/:id
 const deleteTodo = async (req, res) => {
-  // Complete this to delete the selected todo item
+  try {
+    const todo = await Todo.findByIdAndDelete(req.params.id);
+    if (!todo) {
+      return res.status(404).json({ message: "Todo not found" });
+    }
+    res.status(200).json({ message: "Todo deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
 };
 
 module.exports = { getTodos, createTodo, updateTodo, deleteTodo };
